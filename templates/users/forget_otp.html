@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP | My Blog</title>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .otp-container {
+            background: #fff;
+            padding: 40px 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+            width: 360px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 26px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+            display: block;
+            margin-bottom: 6px;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 20px;
+        }
+
+        input:focus {
+            border-color: #5563DE;
+        }
+
+        .btn {
+            background-color: #5563DE;
+            color: white;
+            border: none;
+            padding: 10px 0;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #4450c5;
+        }
+
+        .resend {
+            margin-top: 18px;
+            font-size: 14px;
+        }
+
+        .resend a {
+            color: #5563DE;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .resend a:hover {
+            text-decoration: underline;
+        }
+
+        /* Optional: error messages */
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="otp-container">
+        <h1>OTP Verification 🔐</h1>
+        <p class="subtitle">Please enter the 6-digit code sent to your email</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+            
+            <label for="otp">OTP:</label>
+            <input type="text" id="otp" name="otp" placeholder="Enter OTP" required>
+
+            <button type="submit" class="btn">Verify</button>
+        </form>
+
+        <p class="resend">
+            Didn’t receive the code? <a href="{% url 'resend_otp' %}">Resend OTP</a>
+        </p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ product.title }} - ThriftHome</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ product.title }}">
+  <meta property="og:description" content="{{ product.discription }}">
+  <meta property="og:image" content="{{ product.image.url }}">
+  <meta property="og:url" content="{{ product_url }}">
+  <meta property="og:type" content="product">
+
+  <style>
+    body {
+      font-family: 'Work Sans', sans-serif;
+    }
+    .thumbnail {
+      cursor: pointer;
+      transition: transform .2s ease, border .2s ease;
+    }
+    .thumbnail:hover {
+      transform: scale(1.05);
+    }
+    .active-thumb {
+      border: 3px solid #06b6d4;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const mainImage = document.getElementById("mainImage");
+      document.querySelectorAll(".thumbnail").forEach(img => {
+        img.addEventListener("click", () => {
+          mainImage.src = img.src;
+          document.querySelectorAll(".thumbnail").forEach(t => t.classList.remove("active-thumb"));
+          img.classList.add("active-thumb");
+        });
+      });
+    });
+
+    function shareProduct() {
+      const title = "{{ product.title|escapejs }}";
+      const url = "{{ product_url }}";
+
+      if (navigator.share) {
+        navigator.share({ title, url });
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          alert("Product link copied!");
+        });
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100">
+
+  <!-- PAGE WRAPPER -->
+  <div class="max-w-6xl mx-auto px-4 py-10 pb-32">
+
+    <!-- PRODUCT CARD -->
+    <div class="bg-white rounded-3xl shadow-lg overflow-hidden">
+
+      <!-- IMAGE SECTION -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+
+        <!-- Main Image -->
+        <div>
+          <img
+            id="mainImage"
+            src="{{ product.image.url }}"
+            class="w-full max-h-[420px] object-contain rounded-2xl bg-gray-50 p-4"
+          />
+
+          <!-- Thumbnails -->
+          <div class="flex gap-3 mt-5 justify-center">
+            {% for img in images %}
+            <img
+              src="{{ img.image.url }}"
+              class="thumbnail w-16 h-16 object-cover rounded-xl border"
+            />
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- PRODUCT INFO -->
+        <div class="flex flex-col justify-between">
+
+          <div>
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-3">
+              {{ product.title }}
+            </h1>
+
+            <p class="text-3xl font-bold text-cyan-600 mb-4">
+              ₹{{ product.price }}
+            </p>
+
+            <div class="flex items-center gap-2 text-gray-500 mb-6">
+              <span class="material-symbols-outlined">category</span>
+              {{ product.category.name }}
+            </div>
+
+            <!-- DESCRIPTION -->
+            <p class="text-gray-600 leading-relaxed text-lg">
+              {{ product.discription }}
+            </p>
+          </div>
+
+          <!-- ACTION BUTTONS -->
+          <div class="mt-8 flex gap-4">
+            <a
+              href="{% url 'add_to_cart' product.id %}"
+              class="flex-1 bg-cyan-600 text-white h-14 rounded-2xl font-bold flex items-center justify-center hover:opacity-90 transition"
+            >
+              Add to Cart
+            </a>
+
+            <!-- SINGLE SHARE BUTTON -->
+            <button
+              onclick="shareProduct()"
+              class="w-14 h-14 rounded-2xl border flex items-center justify-center hover:bg-gray-100 transition"
+              aria-label="Share product"
+            >
+              <span class="material-symbols-outlined">share</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

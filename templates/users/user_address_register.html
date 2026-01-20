@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-indigo-100
+             flex items-center justify-center font-[Inter]">
+
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 animate-fade-in">
+
+        <!-- Logo / Icon -->
+        <div class="flex justify-center mb-4">
+            <div class="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-indigo-600" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M12 7a4 4 0 110-8 4 4 0 010 8z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <h2 class="text-2xl font-bold text-gray-800 text-center">
+            Create your account
+        </h2>
+        <p class="text-sm text-gray-500 text-center mt-1 mb-6">
+            Join us and start shopping smarter 🚀
+        </p>
+
+        <!-- Form -->
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Django form -->
+            <div class="space-y-3">
+                {{ form.as_p }}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                    class="w-full h-12 bg-indigo-600 text-white font-semibold
+                           rounded-xl hover:bg-indigo-700 focus:ring-4
+                           focus:ring-indigo-300 transition">
+                Create Account
+            </button>
+        </form>
+
+        <!-- Footer -->
+       
+
+    </div>
+
+    <!-- Simple animation -->
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-out;
+        }
+    </style>
+
+</body>
+</html>

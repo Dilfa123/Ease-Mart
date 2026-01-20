@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ThriftHome - User Profile</title>
+
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        primary: "#13c8ec",
+        "background-light": "#f6f8f8",
+        "background-dark": "#101f22",
+      },
+      fontFamily: {
+        display: ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
+      },
+      borderRadius: {
+        DEFAULT: "0.5rem",
+        lg: "1rem",
+        xl: "1.5rem",
+        full: "9999px"
+      },
+    },
+  },
+}
+</script>
+
+<style>
+.material-symbols-outlined.fill {
+  font-variation-settings: 'FILL' 1;
+}
+</style>
+</head>
+
+<body class="font-display">
+
+<div class="relative flex min-h-screen flex-col bg-background-light dark:bg-background-dark">
+
+<!-- ================= TOP BAR ================= -->
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur px-4 py-4">
+  <h2 class="text-center text-lg font-bold text-slate-900 dark:text-white">
+    Profile
+  </h2>
+</header>
+
+<main class="flex-grow pb-24 px-4">
+
+<!-- ================= PROFILE HEADER ================= -->
+<section class="pt-6 pb-8 flex flex-col items-center gap-4">
+
+  <div class="relative">
+    <div
+      class="h-32 w-32 rounded-full ring-4 ring-primary/50 shadow-lg bg-cover bg-center"
+      style='background-image:url("https://lh3.googleusercontent.com/aida-public/AB6AXuDMH-aIZtXLCzryw2onJ2AoA4foW-ajdolyGgzesapf-UivPBun8wPLo13s8SU-54EsgZG5NiaWD3j0XOdXqbu_JjkvS8bnic6oI2qVS1fi6Z4j4d4JzCnSn0FM7cc3AtDJnoebl-gpS2vRkkeVxC0TucvB4Vs9rfdtnh4UDfvBrAPCg_8fbPseL5-y4oeh1kQU6y8SeJcFNQ88iUqg0Vtms0K25EoeVe17XSxBFD4KzGbkH6FEXg5zvm6U-AdkFJqLAiSEpVp_x9LJ")'>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <p class="text-xl font-bold text-slate-900 dark:text-white">
+      {{ request.user.username }}
+    </p>
+    <p class="text-slate-500 dark:text-slate-400">
+      {{ request.user.email }}
+    </p>
+  </div>
+
+</section>
+
+<!-- ================= MENU ================= -->
+<section class="space-y-3">
+
+  <!-- Address -->
+  <a href="{% url 'show_address' %}" class="block">
+    <div class="flex items-center gap-4 bg-white dark:bg-slate-800/50 p-4 rounded-xl shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+      <div class="size-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+        <span class="material-symbols-outlined">location_on</span>
+      </div>
+      <span class="font-medium text-slate-900 dark:text-white flex-1">
+        Address
+      </span>
+      <span class="material-symbols-outlined text-slate-400">
+        chevron_right
+      </span>
+    </div>
+  </a>
+
+  <!-- Orders -->
+  <a href="{% url 'order_items' %}" class="block">
+    <div class="flex items-center gap-4 bg-white dark:bg-slate-800/50 p-4 rounded-xl shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+      <div class="size-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+        <span class="material-symbols-outlined">local_shipping</span>
+      </div>
+      <span class="font-medium text-slate-900 dark:text-white flex-1">
+        My Orders
+      </span>
+      <span class="material-symbols-outlined text-slate-400">
+        chevron_right
+      </span>
+    </div>
+  </a>
+
+  <!-- Wallet -->
+  <a href="{% url 'wallet_view' %}" class="block">
+    <div class="flex items-center gap-4 bg-white dark:bg-slate-800/50 p-4 rounded-xl shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+      <div class="size-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+        <span class="material-symbols-outlined">wallet</span>
+      </div>
+      <span class="font-medium text-slate-900 dark:text-white flex-1">
+        Wallet
+      </span>
+      <span class="material-symbols-outlined text-slate-400">
+        chevron_right
+      </span>
+    </div>
+  </a>
+
+</section>
+
+</main>
+
+<!-- ================= BOTTOM NAV ================= -->
+<nav class="fixed bottom-0 left-0 right-0 h-14 bg-primary flex justify-around items-center text-white">
+
+  <a href="{% url 'home' %}">
+    <span class="material-symbols-outlined !text-3xl">home</span>
+  </a>
+
+  <a href="{% url 'cart_products' %}">
+    <span class="material-symbols-outlined !text-3xl">shopping_cart</span>
+  </a>
+
+  <a href="{% url 'user_detail' %}">
+    <span class="material-symbols-outlined !text-3xl">person</span>
+  </a>
+
+</nav>
+
+</div>
+</body>
+</html>

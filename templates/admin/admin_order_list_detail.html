@@ -1,0 +1,62 @@
+{% extends 'admin/dashboard.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-6">🛒 Order Items</h1>
+
+<div class="bg-white rounded-xl shadow p-6">
+
+  {% if items %}
+    <div class="space-y-4">
+      {% for item in items %}
+
+      <div class="flex items-center gap-5 p-4 border rounded-lg hover:bg-gray-50">
+
+        <!-- PRODUCT IMAGE -->
+        <img
+          src="{{ item.product.image.url }}"
+          alt="{{ item.product.title }}"
+          class="w-16 h-16 object-cover rounded-md border"
+        />
+
+        <!-- PRODUCT DETAILS -->
+        <div class="flex-1">
+          <p class="font-semibold text-gray-800">
+            {{ item.product.title }}
+          </p>
+          <p class="text-sm text-gray-500">
+            Quantity: {{ item.quantity }}
+          </p>
+        </div>
+
+        <!-- PRICE -->
+        <div class="text-right">
+          <p class="text-sm text-gray-500">Price</p>
+          <p class="font-bold text-gray-800">
+            ₹{{ item.price }}
+          </p>
+        </div>
+
+      </div>
+
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <p class="text-center text-gray-500 py-6">
+      No items in this order
+    </p>
+  {% endif %}
+
+  <!-- BACK BUTTON -->
+  <div class="mt-6">
+    <a href="{% url 'admin_order_list' %}"
+       class="inline-block text-sm text-gray-600 hover:underline">
+      ← Back to Orders
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}

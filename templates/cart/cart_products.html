@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Cart</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+
+<body class="bg-gray-100 font-[Plus Jakarta Sans]">
+
+<div class="min-h-screen flex justify-center">
+  <div class="w-full max-w-4xl">
+
+    <!-- Header -->
+    <header class="sticky top-0 bg-white shadow-sm p-4 flex items-center">
+      
+      <h1 class="flex-1 text-center text-lg font-bold">My Cart</h1>
+      <p class="text-sm text-gray-500">{{ items|length }} items</p>
+    </header>
+
+    <!-- Cart Items -->
+    <main class="p-6 space-y-4 pb-40">
+
+      {% if items %}
+        {% for item in items %}
+        <div class="bg-white rounded-xl shadow-sm p-4">
+          <div class="flex gap-4">
+
+            <!-- Product Image -->
+            <img src="{{ item.product.image.url }}"
+                 class="h-24 w-24 rounded-lg object-cover" />
+
+            <!-- Product Info -->
+            <div class="flex-1 flex flex-col justify-between">
+              <div>
+                <p class="text-base font-semibold">{{ item.product.title }}</p>
+                <p class="text-sm font-bold mt-1">₹{{ item.product.price }}</p>
+                <td class="text-center p-3">
+        <div class="inline-flex items-center border rounded-lg">
+
+          <!-- DECREASE -->
+          <a href="{% url 'decrease_quantity' item.id %}"
+             class="px-3 py-1 text-lg font-bold hover:bg-gray-200">
+            −
+          </a>
+
+          <span class="px-4 py-1 font-semibold">
+            {{ item.quantity }}
+          </span>
+
+          <!-- INCREASE -->
+          {% if item.quantity < item.product.quantity %}
+          <a href="{% url 'increase_quantity' item.id %}"
+             class="px-3 py-1 text-lg font-bold hover:bg-gray-200">
+            +
+          </a>
+          {% else %}
+          <span class="px-3 py-1 text-gray-400 cursor-not-allowed">
+            +
+          </span>
+          {% endif %}
+
+        </div>
+
+        {% if item.product.quantity == 0 %}
+          <p class="text-xs text-red-600 mt-1">Out of stock</p>
+        {% endif %}
+              </div>
+
+              <!-- Remove -->
+              <div class="flex justify-end">
+                <a href="{% url 'remove_from_cart' item.id %}"
+                   class="text-red-500 text-sm font-medium">
+                  Remove
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-center text-gray-500">Your cart is empty.</p>
+      {% endif %}
+
+      <!-- Total -->
+      {% if items %}
+      <div class="mt-8 bg-white rounded-xl p-4 shadow-sm">
+        <div class="flex justify-between items-center">
+          <p class="text-base font-semibold">Total</p>
+          <p class="text-lg font-bold">₹{{ total }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+    </main>
+
+    <!-- Buy Now -->
+    {% if items %}
+<footer class="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+ <a href="{% url 'checkout' %}?cart=1"
+   class="block w-full h-14 bg-blue-600 text-white font-bold rounded-xl
+          flex items-center justify-center">
+  Buy Now
+</a>
+  </div>
+</footer>
+{% endif %}
+
+
+  </div>
+</div>
+
+</body>
+</html>

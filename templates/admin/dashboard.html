@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>{% block title %}Admin Dashboard{% endblock %}</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: "#0a4d94",
+        "background-light": "#f6f7f8",
+      },
+      fontFamily: {
+        display: ["Inter", "sans-serif"]
+      },
+    },
+  },
+}
+</script>
+</head>
+
+<body class="bg-background-light font-display">
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="flex w-64 flex-col bg-primary text-white p-4">
+
+  <!-- LOGO -->
+  <div class="flex items-center gap-3 p-3 mb-6">
+    <span class="material-symbols-outlined text-3xl">shield</span>
+    <div>
+      <h1 class="font-bold">Admin Panel</h1>
+      <p class="text-sm text-white/80">Management</p>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="flex flex-col gap-2 flex-grow">
+
+    <a href="{% url 'admin_dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">dashboard</span> Dashboard
+    </a>
+
+    <a href="{% url 'admin_user' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">group</span> Users
+    </a>
+
+    <a href="{% url 'admin_product_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">inventory_2</span> Products
+    </a>
+
+    <a href="{% url 'admin_category_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">category</span> Categories
+    </a>
+
+    <a href="{% url 'admin_coupon_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">sell</span> Coupons
+    </a>
+  <a href="{% url 'admin_order_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+        <span class="material-symbols-outlined">local_shipping</span> Orders
+      </a>
+    <a href="{% url 'admin_wallet' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+        <span class="material-symbols-outlined">wallet</span> Wallet
+      </a>
+  </nav>
+
+  <!-- LOGOUT -->
+  <a href="{% url 'admin_logout' %}"
+     class="flex items-center gap-3 px-3 py-2 rounded-lg  hover:bg-primary/90">
+    <span class="material-symbols-outlined">logout</span>
+    Logout
+  </a>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="flex-1 p-8 overflow-y-auto">
+  {% block content %}
+  <h1 class="text-3xl font-bold mb-8">📊 Revenue Dashboard</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Total Revenue</p>
+        <p class="text-3xl font-bold text-green-600">₹{{ total_revenue }}</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Today’s Revenue</p>
+        <p class="text-3xl font-bold text-blue-600">₹{{ today_revenue }}</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Monthly Revenue</p>
+        <p class="text-3xl font-bold text-purple-600">₹{{ monthly_revenue }}</p>
+    </div>
+
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-semibold mb-4">Revenue by Payment Method</h2>
+
+        <div class="flex justify-between text-lg">
+            <span>Stripe</span>
+            <span class="font-semibold">₹{{ stripe_revenue }}</span>
+        </div>
+
+        <div class="flex justify-between text-lg mt-2">
+            <span>Wallet</span>
+            <span class="font-semibold">₹{{ wallet_revenue }}</span>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-semibold mb-4">Orders Summary</h2>
+
+        <div class="flex justify-between">
+            <span>Total Orders</span>
+            <span class="font-semibold">{{ total_orders }}</span>
+        </div>
+
+        <div class="flex justify-between mt-2">
+            <span>Stripe Orders</span>
+            <span class="font-semibold">{{ stripe_orders }}</span>
+        </div>
+
+        <div class="flex justify-between mt-2">
+            <span>Wallet Orders</span>
+            <span class="font-semibold">{{ wallet_orders }}</span>
+        </div>
+    </div>
+
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+  <!-- MOST SELLING CATEGORIES -->
+  <div class="bg-white p-6 rounded-xl shadow">
+    <h2 class="text-xl font-semibold mb-4">🔥 Most Selling Categories</h2>
+
+    {% if top_categories %}
+      <ul class="space-y-3">
+        {% for cat in top_categories %}
+          <li class="flex justify-between items-center">
+            <span class="font-medium text-gray-700">
+              {{ cat.product__category__name }}
+            </span>
+            <span class="font-bold text-primary">
+              {{ cat.total_sold }} sold
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-sm text-gray-500">No sales data available</p>
+    {% endif %}
+  </div>
+
+  
+</div>
+
+  {% endblock %}
+</main>
+
+</div>
+</body>
+</html>

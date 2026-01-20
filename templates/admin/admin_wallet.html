@@ -1,0 +1,84 @@
+{% extends 'admin/dashboard.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Wallet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+{%block content%}
+
+<body class="bg-gray-100 min-h-screen">
+
+<div class="max-w-7xl mx-auto p-6">
+
+    <!-- PAGE HEADER -->
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">💰 Admin Wallet</h1>
+    </div>
+
+    <!-- WALLET BALANCE CARD -->
+    <div class="bg-white rounded-2xl shadow p-6 mb-8">
+        <p class="text-gray-500 text-sm mb-2">Total Wallet Balance</p>
+        <p class="text-4xl font-bold text-green-600">
+            ₹{{ wallet.balance }}
+        </p>
+    </div>
+
+    <!-- TRANSACTIONS TABLE -->
+    <div class="bg-white rounded-2xl shadow p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            Wallet Transactions
+        </h2>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-200 rounded-lg">
+                <thead class="bg-gray-100 text-gray-600 text-sm">
+                    <tr>
+                        <th class="px-4 py-3 text-left">#</th>
+                        <th class="px-4 py-3 text-left">Order ID</th>
+                        <th class="px-4 py-3 text-left">Amount</th>
+                        <th class="px-4 py-3 text-left">Date</th>
+                    </tr>
+                </thead>
+
+                <tbody class="text-sm text-gray-700">
+                    {% for tx in transactions %}
+                    <tr class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-3">{{ forloop.counter }}</td>
+                        <td class="px-4 py-3 font-medium">
+                            #{{ tx.order.id }}
+                        </td>
+                        <td class="px-4 py-3 text-green-600 font-semibold">
+                            ₹{{ tx.amount }}
+                        </td>
+                        <td class="px-4 py-3">
+                            {{ tx.created_at|date:"d M Y, h:i A" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-6 text-center text-gray-500">
+                            No transactions yet
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+</body>
+</html>

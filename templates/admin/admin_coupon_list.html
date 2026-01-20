@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Dashboard - Coupons</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: "#0a4d94",
+        "background-light": "#f6f7f8",
+      },
+      fontFamily: {
+        display: ["Inter", "sans-serif"]
+      },
+    },
+  },
+}
+</script>
+</head>
+
+<body class="bg-background-light font-display">
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="flex w-64 flex-col bg-primary text-white p-4">
+  <div class="flex items-center gap-3 p-3 mb-6">
+    <span class="material-symbols-outlined text-3xl">shield</span>
+    <div>
+      <h1 class="font-bold">Admin Panel</h1>
+      <p class="text-sm text-white/80">Management</p>
+    </div>
+  </div>
+
+  <nav class="flex flex-col gap-2 flex-grow">
+    <a href="{% url 'admin_dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">dashboard</span> Dashboard
+    </a>
+
+    <a href="{% url 'admin_user' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">group</span> Users
+    </a>
+
+    <a href="{% url 'admin_product_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">inventory_2</span> Products
+    </a>
+
+    <a href="{% url 'admin_category_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">category</span> Categories
+    </a>
+
+    <a href="{% url 'admin_coupon_list' %}"
+       class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/20 font-bold">
+      <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">sell</span>
+      Coupons
+    </a>
+    <a href="{% url 'admin_order_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">local_shipping</span> Orders
+    </a>
+    <a href="{% url 'admin_wallet' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+        <span class="material-symbols-outlined">wallet</span> Wallet
+      </a>
+  </nav>
+
+  <a href="{% url 'admin_logout' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+    <span class="material-symbols-outlined">logout</span> Logout
+  </a>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="max-w-6xl mx-auto">
+
+<!-- HEADER -->
+<header class="flex justify-between items-center mb-6">
+  <h1 class="text-4xl font-black text-slate-900">Coupons</h1>
+
+  <a href="{% url 'admin_coupon_add' %}"
+     class="flex items-center gap-2 rounded-xl h-12 px-6 bg-primary text-white font-bold hover:bg-primary/90">
+    <span class="material-symbols-outlined">add</span>
+    Add Coupon
+  </a>
+</header>
+
+<!-- COUPON TABLE -->
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+<table class="w-full text-sm text-left">
+  <thead class="bg-slate-100 border-b">
+    <tr>
+      <th class="px-6 py-4">Code</th>
+      <th class="px-6 py-4">Discount</th>
+      <th class="px-6 py-4">Status</th>
+      <th class="px-6 py-4 text-right">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {% for c in coupons %}
+    <tr class="border-b hover:bg-slate-50">
+      <td class="px-6 py-4 font-semibold">{{ c.code }}</td>
+
+      <td class="px-6 py-4 font-medium">₹{{ c.discount }}</td>
+
+      <td class="px-6 py-4">
+{% if c.is_active %}
+  <span class="bg-green-100 text-green-800">Active</span>
+{% else %}
+  <span class="bg-red-100 text-red-800">Inactive</span>
+{% endif %}
+
+      </td>
+
+      <td class="px-6 py-4 flex justify-end gap-4">
+        <a href="{% url 'admin_coupon_edit' c.id %}"
+           class="text-blue-600 hover:text-blue-800">
+          <span class="material-symbols-outlined">edit</span>
+        </a>
+
+        <form method="post" action="{% url 'admin_coupon_delete' c.id %}">
+          {% csrf_token %}
+          <button type="submit"
+                  onclick="return confirm('Delete this coupon?')"
+                  class="text-red-600 hover:text-red-800">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </form>
+      </td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan="4" class="py-6 text-center text-gray-500">
+        No coupons found.
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+</div>
+</main>
+</div>
+</body>
+</html>

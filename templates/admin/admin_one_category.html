@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ category.name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- PAGE TITLE -->
+    <div class="px-6 py-6 flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-gray-800">
+            Category: {{ category.name }}
+        </h1>
+
+        <a href="{% url 'admin_category_list' %}" 
+           class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">
+           ← Back to Categories
+        </a>
+    </div>
+
+    <!-- PRODUCT CARDS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-6">
+
+        {% for product in products %}
+        <div class="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition">
+            
+            <!-- Image -->
+            <div class="h-48 bg-gray-100 flex justify-center items-center">
+                <img src="{{ product.image.url }}" 
+                     class="h-full w-full object-contain p-2">
+            </div>
+
+            <!-- Content -->
+            <div class="p-4">
+                <h3 class="font-semibold text-lg text-gray-800">{{ product.title }}</h3>
+
+                <p class="text-sm text-gray-600 mt-1 line-clamp-2">
+                    {{ product.description }}
+                </p>
+
+                <p class="text-xl font-bold text-green-600 mt-3">
+                    ₹{{ product.price }}
+                </p>
+            </div>
+
+        </div>
+        {% empty %}
+        <p class="col-span-full text-gray-500 text-center py-10 text-lg">
+            No products available in this category.
+        </p>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>

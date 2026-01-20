@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-100
+             flex items-center justify-center font-[Inter]">
+
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 animate-fade-in">
+
+        <!-- Header -->
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-1">
+            Submit Details
+        </h2>
+        <p class="text-sm text-gray-500 text-center mb-6">
+            Please fill out the form below
+        </p>
+
+        <!-- Form -->
+        <form method="post" autocomplete="on" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Django form -->
+            <div class="space-y-3">
+                {{ form.as_p }}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                    class="w-full h-12 bg-indigo-600 text-white font-semibold
+                           rounded-xl hover:bg-indigo-700 transition
+                           focus:ring-4 focus:ring-indigo-300">
+                Submit
+            </button>
+        </form>
+
+    </div>
+
+    <!-- Animation -->
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.4s ease-out;
+        }
+    </style>
+
+</body>
+</html>

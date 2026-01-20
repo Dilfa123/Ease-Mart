@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Details</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+<div class="max-w-3xl mx-auto mt-10">
+    <div class="bg-white rounded-xl shadow p-8">
+
+        <h1 class="text-3xl font-bold text-primary mb-6">Edit Category</h1>
+
+        <form method="POST" class="grid grid-cols-1 gap-6" autocomplete="on">
+            {% csrf_token %}
+
+           
+            <!-- Django Form Fields -->
+            <div class="col-span-1">
+                {{ form.as_p }}
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-end gap-4 mt-4">
+                <a href="javascript:history.back()"
+                   class="px-6 py-3 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                    Cancel
+                </a>
+                 <button type="submit"  class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">register</button>
+            </div>
+
+              

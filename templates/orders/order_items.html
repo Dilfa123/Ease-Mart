@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#137fec",
+            background: "#f6f7f8",
+          },
+          fontFamily: {
+            display: ["Inter", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+
+<body class="font-display bg-background text-[#0d141b]">
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+
+  <!-- PAGE TITLE -->
+  <div class="mb-8">
+    <h1 class="text-4xl font-black">My Orders</h1>
+    <div class="h-1 w-20 bg-primary mt-2 rounded-full"></div>
+  </div>
+
+  {% for order in orders %}
+  <div class="mb-8 bg-white rounded-xl shadow-sm border">
+
+    <!-- ORDER HEADER -->
+    <div class="flex flex-wrap justify-between items-center p-4 border-b gap-4">
+      <div>
+        <p class="font-bold">Order #{{ order.id }}</p>
+        <p class="text-sm text-gray-500">Total: ₹{{ order.total_amount }}</p>
+      </div>
+
+      <div class="flex items-center gap-3">
+
+        <!-- STATUS BADGE -->
+        <span class="px-3 py-1 rounded-full text-sm font-medium
+          {% if order.status == 'Delivered' %}
+            bg-green-100 text-green-700
+          {% elif order.status == 'Shipped' %}
+            bg-orange-100 text-orange-700
+          {% elif order.status == 'Cancelled' %}
+            bg-red-100 text-red-700
+          {% else %}
+            bg-gray-100 text-gray-700
+          {% endif %}
+        ">
+          {{ order.status }}
+        </span>
+
+        <!-- CANCEL BUTTON -->
+        {% if order.status == 'placed' %}
+        <form method="post" action="{% url 'order_cancel' order.id %}">
+          {% csrf_token %}
+          <button
+            type="submit"
+            onclick="return confirm('Are you sure you want to cancel this order?')"
+            class="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition">
+            Cancel
+          </button>
+        </form>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- ORDER ITEMS -->
+    <div class="divide-y">
+      {% for item in order.items.all %}
+      <div class="flex gap-4 p-4">
+
+        <!-- PRODUCT IMAGE -->
+        <img
+          src="{{ item.product.image.url }}"
+          alt="{{ item.product.title }}"
+          class="w-24 h-24 rounded-lg object-cover border"
+        >
+
+        <!-- PRODUCT DETAILS -->
+        <div class="flex-1">
+          <p class="font-bold">{{ item.product.title }}</p>
+          <p class="text-sm text-gray-500">Quantity: {{ item.quantity }}</p>
+          <p class="font-semibold text-primary mt-1">₹{{ item.price }}</p>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- DELIVERY ADDRESS -->
+    <div class="p-4 bg-gray-50 rounded-b-xl text-sm text-gray-700">
+      <p class="font-semibold mb-1">Delivery Address</p>
+      {{ order.address.place }}<br>
+      {{ order.address.pincode }}<br>
+      Phone: {{ order.address.phone }}
+    </div>
+
+  </div>
+  {% empty %}
+    <p class="text-center text-gray-500">No orders yet.</p>
+  {% endfor %}
+
+  <!-- ACTION BUTTON -->
+  <div class="text-center mt-10">
+    <a href="{% url 'home' %}"
+       class="inline-flex items-center justify-center h-12 px-8 rounded-full bg-primary text-white font-bold hover:bg-blue-700 transition">
+      Continue Shopping
+    </a>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .admin-login-container {
+            background: white;
+            padding: 40px 35px;
+            width: 380px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+        }
+
+        .admin-login-container h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #5563DE;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #5563DE;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #4450c5;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-login-container">
+        <h2>Admin Login 🛡️</h2>
+        <p class="subtitle">Access the admin panel</p>
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Username</label>
+                <input name="username" type="text" placeholder="Enter admin username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input name="password" type="password" placeholder="Enter password" required>
+            </div>
+
+            <button type="submit" class="btn">Login</button>
+            
+        </form>
+    </div>
+
+</body>
+</html>

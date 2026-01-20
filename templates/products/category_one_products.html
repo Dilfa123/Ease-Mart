@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>ThriftHome - Products</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <style>
+    body { font-family: 'Work Sans', sans-serif; }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display">
+
+  <div class="w-full max-w-screen-xl mx-auto">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-10 bg-white dark:bg-slate-900 shadow-sm">
+      <div class="flex justify-between px-6 py-4 items-center">
+        <a href="{% url 'home' %}">
+          <span class="material-symbols-outlined text-3xl">arrow_back</span>
+        </a>
+        <p class="text-xl font-bold">Products</p>
+        <div class="w-10"></div>
+      </div>
+    </header>
+
+    <main class="pb-24 px-6">
+
+      <!-- Page Heading -->
+      <div class="py-4">
+        <p class="text-4xl font-bold">Products</p>
+        <p class="text-gray-500 text-sm">Browse available items.</p>
+      </div>
+
+      <!-- PRODUCTS GRID -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
+
+        {% for product in products %}
+
+        <!-- PRODUCT CARD -->
+        <a href="{% url 'user_single_product' product.id %}">
+          <div class="flex flex-col gap-2 pb-2 bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm">
+
+            <!-- Main image -->
+            <div class="w-full bg-center bg-no-repeat aspect-square bg-cover"
+              style="background-image: url('{{ product.image.url }}');">
+            </div>
+
+            <!-- Details -->
+            <div class="px-3 pb-1">
+              <p class="text-base font-medium">{{ product.title }}</p>
+              <p class="text-sm text-gray-500">₹{{ product.price }}</p>
+
+              <!-- Condition label -->
+              
+
+              <!-- Extra thumbnails -->
+              <div class="flex gap-2 mt-2">
+                {% for img in product.images.all %}
+                  <img src="{{ img.image.url }}" class="w-10 h-10 rounded-md object-cover border" />
+                {% endfor %}
+              </div>
+
+            </div>
+          </div>
+        </a>
+
+        {% endfor %}
+
+      </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 max-w-screen-xl w-full h-16 bg-primary text-white flex justify-around items-center">
+      <span class="material-symbols-outlined text-3xl">home</span>
+      <span class="material-symbols-outlined text-3xl">favorite</span>
+      <span class="material-symbols-outlined text-3xl">person</span>
+    </nav>
+
+  </div>
+
+</body>
+</html>

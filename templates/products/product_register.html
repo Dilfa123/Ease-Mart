@@ -1,0 +1,91 @@
+{% extends 'admin/dashboard.html' %}
+{% load static %}
+
+{% block title %}Add New Product{% endblock %}
+
+{% block content %}
+<main class="flex-1 p-8 overflow-y-auto">
+  <div class="mx-auto max-w-4xl">
+
+    <!-- Card -->
+    <div class="bg-white dark:bg-dark-grey rounded-xl shadow-soft p-8">
+
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-primary dark:text-white text-3xl font-bold">
+          Add New Product
+        </h1>
+        <p class="text-medium-grey dark:text-gray-400 mt-2">
+          Fill out the details below to add a product
+        </p>
+      </div>
+
+      <!-- FORM -->
+      <form method="POST" enctype="multipart/form-data"
+            class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% csrf_token %}
+
+        <!-- TITLE -->
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-2">Product Name</label>
+          {{ form.title }}
+          {% if form.title.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.title.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- PRICE -->
+        <div>
+          <label class="block text-sm font-medium mb-2">Price (₹)</label>
+          {{ form.price }}
+          {% if form.price.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.price.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- CATEGORY -->
+        <div>
+          <label class="block text-sm font-medium mb-2">Category</label>
+          {{ form.category }}
+          {% if form.category.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.category.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-2">Description</label>
+          {{ form.discription }}
+        </div>
+
+        <!-- MAIN IMAGE -->
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-2">Main Image</label>
+          {{ form.image }}
+        </div>
+
+        <!-- MULTI IMAGES -->
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-2">Extra Images</label>
+          <input type="file" name="multi_images" multiple
+                 class="block w-full text-sm border rounded-lg cursor-pointer">
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="md:col-span-2 flex justify-center gap-4 mt-6">
+          <a href="{% url 'admin_product_list' %}"
+             class="px-8 py-3 bg-gray-200 rounded-lg font-semibold">
+            Cancel
+          </a>
+          <button type="submit"
+                  class="px-8 py-3 bg-primary text-white rounded-lg font-semibold hover:shadow-glow-blue">
+            Save Product
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</main>
+{% endblock %}

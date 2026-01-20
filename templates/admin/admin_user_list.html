@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Dashboard - User Management</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: "#0a4d94",
+        "background-light": "#f6f7f8",
+        "background-dark": "#101922",
+      },
+      fontFamily: {
+        display: ["Inter", "sans-serif"]
+      },
+    },
+  },
+}
+</script>
+</head>
+
+<body class="bg-background-light font-display">
+<div class="flex min-h-screen">
+
+  <!-- SIDEBAR -->
+  <aside class="flex w-64 flex-col bg-primary text-white p-4">
+    <div class="flex items-center gap-3 p-3 mb-6">
+      <span class="material-symbols-outlined text-3xl">shield</span>
+      <div>
+        <h1 class="font-bold">Admin Panel</h1>
+        <p class="text-sm text-white/80">Management</p>
+      </div>
+    </div>
+
+    <nav class="flex flex-col gap-2 flex-grow">
+      <a href="{% url 'admin_dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+        <span class="material-symbols-outlined">dashboard</span> Dashboard
+      </a>
+
+      <a href="{% url 'admin_user' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/20">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">group</span>
+        <span class="font-bold">Users</span>
+      </a>
+
+      <a href="{% url 'admin_product_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+        <span class="material-symbols-outlined">inventory_2</span> Products
+      </a>
+
+      <a href="{% url 'admin_category_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+        <span class="material-symbols-outlined">category</span> Categories
+      </a>
+
+      <a href="{% url 'admin_coupon_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+        <span class="material-symbols-outlined">sell</span> Coupons
+      </a>
+      <a href="{% url 'admin_order_list' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">local_shipping</span> Orders
+    </a>
+    <a href="{% url 'admin_wallet' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+        <span class="material-symbols-outlined">wallet</span>Wallet
+      </a>
+    </nav>
+
+    <a href="{% url 'admin_logout' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10">
+      <span class="material-symbols-outlined">logout</span> Logout
+    </a>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 p-8 overflow-y-auto">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- HEADER -->
+      <header class="mb-6">
+        <h1 class="text-4xl font-black text-slate-900">User Management</h1>
+        <p class="text-slate-500 mt-1">View, block or unblock users</p>
+      </header>
+ <form method="get"
+        class="bg-white p-4 rounded-2xl shadow flex flex-col md:flex-row gap-4 items-center">
+
+    <!-- SEARCH -->
+    <input type="text"
+           name="q"
+           value="{{ request.GET.q }}"
+           placeholder="Search Users"
+           class="w-full md:flex-1 rounded-lg border px-4 py-2 focus:ring-primary focus:border-primary">
+      <!-- SORT -->
+    <select name="sort"
+            class="w-full md:w-44 rounded-lg border px-3 py-2">
+      <option value="">Sort By</option>
+      <option value="Active" {% if request.GET.sort == 'Active' %}selected{% endif %}>
+        Active
+      </option>
+      <option value="Inactive" {% if request.GET.sort == 'Inactive' %}selected{% endif %}>
+       Inactive
+      
+    </select>
+
+    <!-- SUBMIT -->
+    <button type="submit"
+            class="bg-primary text-white px-6 py-2 rounded-lg font-semibold">
+      Apply
+    </button>
+
+  </form>
+</section>
+      <!-- USER TABLE -->
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-slate-100 border-b">
+            <tr>
+              <th class="px-6 py-4">ID</th>
+              <th class="px-6 py-4">Username</th>
+              <th class="px-6 py-4">Email</th>
+              <th class="px-6 py-4">Status</th>
+              <th class="px-6 py-4 text-right">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+          {% for u in users %}
+            <tr class="border-b hover:bg-slate-50">
+              <td class="px-6 py-4 font-medium">{{ u.id }}</td>
+              <td class="px-6 py-4">{{ u.username }}</td>
+              <td class="px-6 py-4">{{ u.email }}</td>
+
+              <td class="px-6 py-4">
+                {% if u.is_active %}
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                    Active
+                  </span>
+                {% else %}
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                    Blocked
+                  </span>
+                {% endif %}
+              </td>
+
+              <td class="px-6 py-4 text-right">
+                {% if u.is_active %}
+                  <a href="{% url 'admin_user_block' u.id %}"
+                     class="inline-flex items-center gap-1 text-red-600 font-semibold hover:underline">
+                    <span class="material-symbols-outlined text-sm">block</span> Block
+                  </a>
+                {% else %}
+                  <a href="{% url 'admin_user_unblock' u.id %}"
+                     class="inline-flex items-center gap-1 text-green-600 font-semibold hover:underline">
+                    <span class="material-symbols-outlined text-sm">check_circle</span> Unblock
+                  </a>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="py-6 text-center text-slate-500">
+                No users found
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

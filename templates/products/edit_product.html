@@ -1,0 +1,33 @@
+{% extends 'admin/dashboard.html' %}
+
+{% block title %}Edit Details{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-8">
+
+  <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
+    Edit Details
+  </h1>
+
+  <form method="post" class="space-y-4">
+    {% csrf_token %}
+
+    <div class="space-y-2">
+      {{ form.as_p }}
+    </div>
+
+    <button type="submit"
+      class="w-full py-2 rounded-lg bg-blue-600 hover:bg-blue-700
+             text-white font-semibold transition duration-200">
+      Submit
+    </button>
+    <a href="{% url 'admin_product_list' %}"
+   class="inline-flex items-center gap-2 mb-4 text-sm text-slate-600 hover:text-slate-900">
+  <span class="material-symbols-outlined text-base">arrow_back</span>
+  Back to Product List
+</a>
+
+  </form>
+
+</div>
+{% endblock %}

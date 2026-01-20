@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+<div class="max-w-6xl mx-auto p-6">
+
+    <h1 class="text-3xl font-bold mb-6">Checkout</h1>
+
+    
+
+        <!-- LEFT SECTION -->
+        <div class="md:col-span-2 space-y-6">
+
+            <!-- PRODUCT LIST -->
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Order Items</h2>
+
+                {% for item in items %}
+                <div class="flex items-center gap-4 border-b pb-4 mb-4 last:border-none last:pb-0 last:mb-0">
+
+                    <img src="{{ item.product.image.url }}"
+                         class="w-20 h-20 object-cover rounded-lg border">
+
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-lg">{{ item.product.title }}</h3>
+                        <p class="text-gray-500 text-sm">₹{{ item.product.price }}</p>
+                        <p class="text-gray-500 text-sm">Qty: {{ item.quantity }}</p>
+                    </div>
+
+                    <p class="font-semibold text-green-600">
+                        ₹{{ item.item_total }}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- ADDRESS SELECTION (SHARED) -->
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Select Delivery Address</h2>
+
+                {% for addr in address %}
+                <label class="flex items-start gap-3 p-4 border rounded-lg mb-3 cursor-pointer">
+                    <input type="radio"
+                           name="address_id"
+                           value="{{ addr.id }}"
+                           {% if addr.is_default %}checked{% endif %}
+                           required>
+                    <div>
+                        <p class="font-medium">{{ addr.place }}</p>
+                        <p class="text-sm text-gray-600">{{ addr.pincode }}</p>
+                        <p class="text-sm text-gray-600">Phone: {{ addr.phone }}</p>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+
+            <!-- COUPON INFO -->
+            {% if subtotal >= 1000 %}
+            <a href="{% url 'add_coupon' %}"
+               class="inline-block bg-green-600 text-white px-4 py-2 rounded-lg">
+                Add Coupon
+            </a>
+            {% else %}
+            <p class="text-sm text-gray-500">
+                Minimum order ₹1000 required to apply coupon
+            </p>
+            {% endif %}
+
+            <!-- PRICE SUMMARY -->
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-lg font-semibold mb-4">Price Details</h2>
+
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span>Subtotal</span>
+                        <span>₹{{ subtotal }}</span>
+                    </div>
+
+                    {% if discount and discount > 0 %}
+                    <div class="flex justify-between items-center text-green-600">
+                        <span>Discount</span>
+                        <div class="flex items-center gap-3">
+                            <span>- ₹{{ discount }}</span>
+                            <a href="{% url 'remove_coupon' %}"
+                               class="text-red-500 text-sm hover:underline">
+                                Remove
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <hr>
+
+                    <div class="flex justify-between font-semibold text-lg">
+                        <span>Total</span>
+                        <span>₹{{ total }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAYMENT METHODS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <!-- STRIPE PAYMENT -->
+                <form method="post" action="{% url 'pay_order' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="address_id" id="stripe_address">
+
+                    <button type="submit"
+                        onclick="setAddress('stripe_address')"
+                        class="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700">
+                        Pay with Card (Stripe)
+                    </button>
+                </form>
+
+                <!-- WALLET PAYMENT -->
+                <form method="post" action="{% url 'wallet_pay_order' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="address_id" id="wallet_address">
+
+                    <p class="text-sm mb-2 text-gray-600">
+                        Wallet Balance:
+                        <span class="font-semibold text-green-600">
+                            ₹{{ wallet.balance }}
+                        </span>
+                    </p>
+
+                    {% if wallet.balance >= total %}
+                    <button type="submit"
+                        onclick="setAddress('wallet_address')"
+                        class="w-full bg-green-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-green-700">
+                        Pay using Wallet
+                    </button>
+                    {% else %}
+                    <button disabled
+                        class="w-full bg-gray-400 text-white py-3 rounded-lg text-lg font-semibold cursor-not-allowed">
+                        Insufficient Wallet Balance
+                    </button>
+                    {% endif %}
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ADDRESS TRANSFER SCRIPT -->
+<script>
+function setAddress(targetInputId) {
+    const selected = document.querySelector('input[name="address_id"]:checked');
+    if (!selected) {
+        alert("Please select an address");
+        event.preventDefault();
+        return;
+    }
+    document.getElementById(targetInputId).value = selected.value;
+}
+</script>
+
+</body>
+</html>
