@@ -1,2 +1,6 @@
 .env
-/env2
+env/
+env2/
+db.sqlite3
+__pycache__/
+*.pyc
