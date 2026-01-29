@@ -36,8 +36,12 @@ DEBUG = os.getenv("DEBUG") == "True"
 
 
 
+
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://your-ec2-public-ip",
+]
 
 
 # Application definition
@@ -142,12 +146,19 @@ WSGI_APPLICATION = 'mainproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': '/var/lib/easemart/db.sqlite3',
     }
 }
+
 
 
 # Password validation
