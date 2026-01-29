@@ -21,64 +21,65 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required(login_url='login')
 def pay_order(request):
-    success_url =  reverse_lazy('success_page')
-    print(success_url)
+    return HttpResponse('works')
+#     success_url =  reverse_lazy('success_page')
+#     print(success_url)
 
-    user = request.user
-    cart = get_create_cart(user)
-    items = Cart_items.objects.filter(cart=cart)
-    address_id = request.POST.get('address_id')
+#     user = request.user
+#     cart = get_create_cart(user)
+#     items = Cart_items.objects.filter(cart=cart)
+#     address_id = request.POST.get('address_id')
     
-    if not address_id:
-        messages.error(request, "Please select an address")
-        url=reverse('checkout')+'?cart=1'
-        return redirect(url)
-    address = get_object_or_404(Address, id=address_id, user=user)
+#     if not address_id:
+#         messages.error(request, "Please select an address")
+#         url=reverse('checkout')+'?cart=1'
+#         return redirect(url)
+#     address = get_object_or_404(Address, id=address_id, user=user)
     
 
-    if not items.exists():
-        messages.error(request, "Cart is empty")
-        return redirect('cart_products')
+#     if not items.exists():
+#         messages.error(request, "Cart is empty")
+#         return redirect('cart_products')
 
-    subtotal = sum(item.product.price * item.quantity for item in items)
-    discount=request.session.get('coupon_discount')
-    if discount:
-        total=max(subtotal-discount,0)
-    else:
-        total=sum(item.product.price * item.quantity for item in items)
-    success_url = request.build_absolute_uri(
-        reverse('success_page')
-    )
-    cancel_url = request.build_absolute_uri(
-        reverse('checkout')
-    )
-    session = stripe.checkout.Session.create(
-    payment_method_types=['card'],
-    mode='payment',
-    customer_email=user.email,
-    line_items=[{
-        'price_data': {
-            'currency': 'inr',
-            'product_data': {'name': 'Order Payment'},
-            'unit_amount': int(total * 100),
-        },
-        'quantity': 1,
-    }],
-    metadata={
-        'user_id': str(user.id),
-        'address_id': str(address.id),
-    },
-    success_url=success_url,
+#     subtotal = sum(item.product.price * item.quantity for item in items)
+#     discount=request.session.get('coupon_discount')
+#     if discount:
+#         total=max(subtotal-discount,0)
+#     else:
+#         total=sum(item.product.price * item.quantity for item in items)
+#     success_url = request.build_absolute_uri(
+#         reverse('success_page')
+#     )
+#     cancel_url = request.build_absolute_uri(
+#         reverse('checkout')
+#     )
+#     session = stripe.checkout.Session.create(
+#     payment_method_types=['card'],
+#     mode='payment',
+#     customer_email=user.email,
+#     line_items=[{
+#         'price_data': {
+#             'currency': 'inr',
+#             'product_data': {'name': 'Order Payment'},
+#             'unit_amount': int(total * 100),
+#         },
+#         'quantity': 1,
+#     }],
+#     metadata={
+#         'user_id': str(user.id),
+#         'address_id': str(address.id),
+#     },
+#     success_url=success_url,
 
     
-    cancel_url=cancel_url,
-)       
+#     cancel_url=cancel_url,
+# )       
 
    
-    request.session['checkout_address_id'] = address.id
-    request.session.pop('coupon_code', None)
-    request.session.pop('coupon_discount', None)
-    return redirect(session.url)
+#     request.session['checkout_address_id'] = address.id
+#     request.session.pop('coupon_code', None)
+#     request.session.pop('coupon_discount', None)
+#     return redirect(session.url)
 
 def success_page(request):
     # order=Order.objects.get(pk=pk)
