@@ -42,14 +42,20 @@ class Coupons(models.Model):
         return self.start_date <= timezone.now().date()
 
     def clean(self):
-        if self.start_date and self.expire_date:
-            if self.start_date > self.expire_date:
-                raise ValidationError(
-                    "Start date cannot be after expiry date"
-                )
-    
+    # Date validation
+     if self.start_date and self.expire_date:
+        if self.start_date > self.expire_date:
+            raise ValidationError(
+                "Start date cannot be after expiry date"
+            )
+
+    # Safe numeric validation
+     if self.min_purchase is not None and self.discount is not None:
         if self.min_purchase < self.discount:
-            raise ValidationError('Discount must be less than minimum purchase')
+            raise ValidationError(
+                'Discount must be less than minimum purchase'
+            )
+
     def save(self, *args, **kwargs):
         self.full_clean()   
         super().save(*args, **kwargs)
