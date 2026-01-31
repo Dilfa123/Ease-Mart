@@ -45,19 +45,41 @@ class CategoryForm(forms.ModelForm):
         if CategoryModel.objects.filter(name__iexact=name).exists():
             raise forms.ValidationError('this category name is already exist')
         return name
+
+
 class CouponForm(forms.ModelForm):
     class Meta:
-        model=Coupons
-        fields=['code','discount','start_date','expire_date','min_purchase']
+        model = Coupons
+        fields = ['code', 'discount', 'start_date', 'expire_date', 'min_purchase']
+
+        widgets = {
+            'start_date': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'w-full border rounded-lg p-2'
+                }
+            ),
+            'expire_date': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'w-full border rounded-lg p-2'
+                }
+            ),
+        }
+
     def clean_discount(self):
         discount = self.cleaned_data.get('discount')
         max_discount = 1000
 
+        if discount is None:
+            return discount
+
         if discount < 0:
             raise forms.ValidationError('Coupon cannot be less than zero')
 
-        if discount < max_discount:
+        if discount > max_discount:
             raise forms.ValidationError('Discount cannot exceed ₹1000')
 
         return discount
+
 
