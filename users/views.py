@@ -29,6 +29,7 @@ def signupview(req):
             raw_pass = form.cleaned_data['password']
             user.set_password(raw_pass)
             user.is_active=False
+            user.save()
             
 
             
