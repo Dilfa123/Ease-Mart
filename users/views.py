@@ -28,7 +28,7 @@ def signupview(req):
             user = form.save(commit=False)
             raw_pass = form.cleaned_data['password']
             user.set_password(raw_pass)
-            user.save()
+            # user.save()
 
             
             req.session['pending_user_id'] = user.id
@@ -36,7 +36,7 @@ def signupview(req):
             otp = str(random.randint(1000, 9999))
             Otp.objects.create(otp=otp, user=user)
             send_otp_via_email(user.email, otp)
-
+            user.save()
             return redirect('otp')
     else:
         form = UserForm()
