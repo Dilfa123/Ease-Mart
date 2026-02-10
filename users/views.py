@@ -28,7 +28,8 @@ def signupview(req):
             user = form.save(commit=False)
             raw_pass = form.cleaned_data['password']
             user.set_password(raw_pass)
-            # user.save()
+            user.is_active=False
+            user.save()
 
             
             req.session['pending_user_id'] = user.id
@@ -36,7 +37,7 @@ def signupview(req):
             otp = str(random.randint(1000, 9999))
             Otp.objects.create(otp=otp, user=user)
             send_otp_via_email(user.email, otp)
-            user.save()
+            
             return redirect('otp')
     else:
         form = UserForm()
@@ -63,7 +64,7 @@ def otpview(req):
         user_otp = req.POST.get('otp')
 
         if otp_obj.otp == user_otp:
-
+            user.is_active=True
            
             login(req, user, backend='django.contrib.auth.backends.ModelBackend')
 
@@ -82,15 +83,20 @@ def otpview(req):
 #      return redirect('error_page')
 def resend_otp(req):
     #try:
-        user=User.objects.last()
-        if user:
-            otp=str(random.randint(100,9999))
-            Otp.objects.create(user=user,otp=otp)
-            send_otp_via_email(user.email,otp)
-            messages.success(req,'resended the otp')
-        else:
-            messages.error(req,'error occured')
-        return redirect('otp')
+       def resend_otp(req):
+            user_id = req.session.get('pending_user_id')
+            if not user_id:
+                messages.error(req, "Session expired.")
+                return redirect('signup')
+
+            user = User.objects.get(id=user_id)
+            otp = str(random.randint(1000, 9999))
+            Otp.objects.create(user=user, otp=otp)
+            send_otp_via_email(user.email, otp)
+
+            messages.success(req, "OTP resent successfully")
+            return redirect('otp')
+
     #except:
 #      return redirect('error_page')
 
