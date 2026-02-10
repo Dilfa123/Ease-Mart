@@ -29,7 +29,7 @@ def signupview(req):
             raw_pass = form.cleaned_data['password']
             user.set_password(raw_pass)
             user.is_active=False
-            user.save()
+            
 
             
             req.session['pending_user_id'] = user.id
@@ -65,7 +65,7 @@ def otpview(req):
 
         if otp_obj.otp == user_otp:
             user.is_active=True
-           
+            user.save()
             login(req, user, backend='django.contrib.auth.backends.ModelBackend')
 
             del req.session['pending_user_id']
